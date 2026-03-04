@@ -1,0 +1,27 @@
+:root {
+      --bg: #1A2035;
+      --blue: #4F8EF7;
+    }
+    body { 
+        background: #F8F9FC; 
+    }
+    .sidebar {
+      width: 240px;
+      background: var(--bg);
+      min-height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+    }
+    .nav-link:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+    .nav-link.active {
+      background: var(--blue) !important;
+      color: #fff !important;
+    }

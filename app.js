@@ -1,14 +1,53 @@
 var app = angular.module('pharmaApp', ['ngRoute']);
 
-app.run(function($rootScope, $location) {
-    $rootScope.isActive = function(viewLocation) {
+app.run(function ($rootScope, $location) {
+
+    var cashierRoutes = ['/pos', '/customers-list', '/customers-form', '/invoices-history'];
+    $rootScope.logout = function() {
+        localStorage.removeItem('currentUser');
+        window.history.replaceState(null, null, window.location.href);
+        $location.path('/login');
+    };
+    $rootScope.$on('$routeChangeStart', function (event, next) {
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        var path = $location.path();
+
+        if (!currentUser && path !== '/login') {
+            event.preventDefault();
+            $location.path('/login');
+            return;
+        }
+
+        if (currentUser && path === '/login') {
+            event.preventDefault();
+            if (currentUser.role === 'Admin') {
+                $location.path('/dashboard');
+            } else {
+                $location.path('/pos');
+            }
+            return;
+        }
+
+        if (currentUser && currentUser.role === 'Cashier') {
+            if (!cashierRoutes.includes(path)) {
+                event.preventDefault();
+                $location.path('/pos');
+            }
+        }
+    });
+
+    $rootScope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
+    };
+
+    $rootScope.isLoginPage = function () {
+        return $location.path() === '/login';
     };
 });
 
 app.config(function ($routeProvider) {
     $routeProvider
-            .when('/dashboard', {
+        .when('/dashboard', {
             templateUrl: 'views/dashboard.html',
             controller: 'dashboardController'
         })
@@ -41,6 +80,6 @@ app.config(function ($routeProvider) {
             controller: 'authController'
         })
         .otherwise({
-            redirectTo: '/dashboard'
+            redirectTo: '/login'
         });
 });

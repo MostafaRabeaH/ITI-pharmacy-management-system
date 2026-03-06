@@ -2,21 +2,57 @@ app.controller ('customerController', function($scope,customerService,$routePara
 
     $scope.customers = [];
     $scope.selectedCustomer ={};
+    $scope.isLoading = true ;
+    $scope.currentPage = 1 ;
+    $scope.pageSize = 10 ;
+    $scope.pageSizeOptions = [5, 10, 15, 20, 25, 50];
 
     $scope.loadCustomers = ()=>{
-
+            $scope.isLoading = true ;
         customerService.getAllCustomers()
         .then (function(response){
             $scope.customers = response.data;
+            $scope.isLoading= false;
         })
         .catch(function(error){
             console.error("Error loading data ", error)
+             $scope.isLoading= false; 
         });
 
     };
 
     $scope.loadCustomers();
-    console.log($scope.customers)
+
+    // pagination 
+    $scope.totalPages = function(totalItems){
+        return Math.ceil(totalItems / $scope.pageSize) || 1;
+    };
+
+    $scope.nextPage = function(totalItems){
+        if ($scope.currentPage < $scope.totalPages(totalItems)){
+            $scope.currentPage ++;
+        }
+    };
+
+    $scope.prevPage = function() {
+        if ($scope.currentPage > 1) {
+            $scope.currentPage--;
+        }
+    };
+
+    $scope.onPageSizeChange = function() {
+        $scope.currentPage = 1;
+    };
+
+    $scope.showingFrom = function(totalItems) {
+        if (totalItems === 0) return 0;
+        return (($scope.currentPage - 1) * $scope.pageSize) + 1;
+    };
+
+    $scope.showingTo = function(totalItems) {
+        var end = $scope.currentPage * $scope.pageSize;
+        return end > totalItems ? totalItems : end;
+    };
 
     $scope.deleteCustomer = function(customerId){
 

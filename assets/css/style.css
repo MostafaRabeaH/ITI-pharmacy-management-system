@@ -1,27 +1,74 @@
 :root {
-      --bg: #1A2035;
-      --blue: #4F8EF7;
-    }
-    body { 
-        background: #F8F9FC; 
-    }
-    .sidebar {
-      width: 240px;
-      background: var(--bg);
-      min-height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-    }
-    .nav-link {
-      color: rgba(255,255,255,0.5);
-      font-size: 14px;
-    }
-    .nav-link:hover {
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-    }
-    .nav-link.active {
-      background: var(--blue) !important;
-      color: #fff !important;
-    }
+  --bg: #1A2035;
+  --blue: #4F8EF7;
+}
+
+body {
+  background: #ffffff;
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--bg);
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.nav-link.active {
+  background: var(--blue) !important;
+  color: #fff !important;
+}
+
+.m-6 {
+  margin: 4rem !important;
+}
+
+.m-7 {
+  margin: 5rem !important;
+}
+
+.mt-6 {
+  margin-top: 4rem !important;
+}
+
+.mt-7 {
+  margin-top: 5rem !important;
+}
+
+.btn-outline-primary {
+    color: var(--blue);
+    border-color: var(--blue);
+    background-color: transparent;
+}
+
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: var(--blue);
+    border-color: var(--blue);
+    color: white;
+}
+
+
+.btn-outline-primary:hover {
+    background-color: var(--blue);
+    border-color: var(--blue);
+    color: white;
+}
+
+.btn-primary{
+    background-color: var(--blue);
+    border-color: var(--blue);
+    color: white;
+}

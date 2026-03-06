@@ -1,0 +1,73 @@
+<div class="mb-4">
+    <h4 class="fw-bold mb-1">{{ customerId ? 'Edit Customer' : 'Add Customer' }}</h4>
+    <span class="text-secondary small">Customers &rarr; {{ customerId ? 'Edit' : 'Add' }}</span>
+</div>
+
+<form ng-submit="saveCustomer()">
+    <div class="row justify-content-center">
+        
+        <div class="col-lg-7 mx-auto">
+            <div class="card border-0 shadow-sm rounded-3 bg-white">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom">
+                        <i class="bi bi-person text-primary"></i>
+                        <span class="fw-bold fs-5">Customer Details</span>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control bg-light border-0 shadow-none py-2" 
+                                   placeholder="e.g. Ahmed Mahmoud" 
+                                   ng-model="customer.name" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Phone <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control bg-light border-0 shadow-none py-2" 
+                                   placeholder="01xxxxxxxxx" 
+                                   ng-model="customer.phone" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Email</label>
+                            <input type="email" class="form-control bg-light border-0 shadow-none py-2" 
+                                   placeholder="email@example.com" 
+                                   ng-model="customer.email">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold small">City / Governorate</label>
+                            <select class="form-select bg-light border-0 shadow-none py-2" ng-model="customer.address">
+                                <option value="">Select a city...</option>
+                                <option value="Cairo">Cairo</option>
+                                <option value="Giza">Giza</option>
+                                <option value="Alexandria">Alexandria</option>
+                                <option value="Mansoura">Mansoura</option>
+                                <option value="Tanta">Tanta</option>
+                                <option value="Port Said">Port Said</option>
+                                <option value="Suez">Suez</option>
+                                <option value="Luxor">Luxor</option>
+                                <option value="Aswan">Aswan</option>
+                                <option value="Assiut">Assiut</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">
+                        <a href="#!/customers-list" class="btn btn-light bg-white border shadow-sm text-secondary px-4 py-2 fw-semibold">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn text-white px-4 py-2 fw-semibold shadow-sm" style="background-color: var(--blue);">
+                            <i class="bi" ng-class="customerId ? 'bi-check2-circle' : 'bi-plus-circle'"></i> 
+                            {{ customerId ? 'Update' : 'Save' }}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</form>

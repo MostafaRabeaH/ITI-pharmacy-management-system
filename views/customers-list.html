@@ -1,0 +1,141 @@
+<div class="card border-0 shadow-sm rounded-3 bg-white">
+    <div class="card-body p-4">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            
+            <div class="input-group" style="max-width: 350px;">
+                <span class="input-group-text bg-light border-end-0 text-secondary">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" class="form-control bg-light border-start-0 shadow-none" 
+                       placeholder="Search by name or phone..." 
+                       ng-model="searchCustomer">
+            </div> 
+
+            <div class="d-flex gap-2">
+                <select class="form-select text-secondary bg-light border-0 shadow-none" style="width: 140px;" ng-model="filterCity">
+                    <option value="">All Cities</option>
+                    <option value="Cairo">Cairo</option>
+                    <option value="Giza">Giza</option>
+                    <option value="Alexandria">Alexandria</option>
+                    <option value="Mansoura">Mansoura</option>
+                    <option value="Tanta">Tanta</option>
+                    <option value="Port Said">Port Said</option>
+                    <option value="Suez">Suez</option>
+                    <option value="Luxor">Luxor</option>
+                    <option value="Aswan">Aswan</option>
+                    <option value="Assiut">Assiut</option>
+                </select>
+
+                <select class="form-select text-secondary bg-light border-0 shadow-none" style="width: 170px;" ng-model="sortCustomers">
+                    <option value="">Sort: Default</option> <!-- This returnes the values as they are in the supabase table -->
+                    <option value="-total_spent">Top amount spent</option>
+                    <option value="total_spent">Lowest amount spent</option>
+                </select>
+                
+                <a href="#!/customers-form" class="btn text-white d-flex align-items-center gap-2 px-3" style="background-color: var(--blue);">
+                    <i class="bi bi-person-plus-fill"></i> Add Customer
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                
+                <thead class="bg-light text-secondary" style="font-size: 13px;">
+                    <tr>
+                        <th class="border-0 fw-semibold text-uppercase py-3">Name</th>
+                        <th class="border-0 fw-semibold text-uppercase py-3">Phone</th>
+                        <th class="border-0 fw-semibold text-uppercase py-3">City</th>
+                        <th class="border-0 fw-semibold text-uppercase py-3">Total Spent</th>
+                        <th class="border-0 fw-semibold text-uppercase py-3 text-end">Actions</th>
+                    </tr>
+                </thead>
+                
+                <tbody class="border-top-0">
+                    
+                    <tr ng-repeat="customer in customers | filter:searchCustomer | filter:{address: filterCity} | orderBy:sortCustomers">
+                        
+                        <td class="py-3">
+                            <div class="fw-bold text-dark">{{ customer.name }}</div>
+                            <div class="text-secondary small" style="font-size: 12px;">{{ customer.email }}</div>
+                        </td>
+                        
+                        <td class="py-3 text-secondary">{{ customer.phone }}</td>
+                        
+                        <td class="py-3 text-secondary">{{ customer.address }}</td>
+                        
+                        <td class="py-3 fw-semibold text-success">{{ customer.total_spent | currency : "EGP" }}</td>
+                        
+                        <td class="py-3 text-end">
+                        <button class="btn btn-sm btn-light text-secondary rounded-circle me-1" title="View Details" 
+                                data-bs-toggle="modal" data-bs-target="#customerModal" 
+                                ng-click="selectCustomer(customer)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                            
+                            <a href="#!/customers-form?id={{customer.id}}" class="btn btn-sm btn-light text-secondary rounded-circle me-1" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            
+                            <button class="btn btn-sm btn-light text-danger rounded-circle" title="Delete" ng-click="deleteCustomer(customer.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr ng-if="(customers | filter:searchCustomer | filter:{address: filterCity}).length === 0">
+                        <td colspan="5" class="text-center py-5 text-secondary">
+                            <i class="bi bi-search fs-2 d-block mb-2 text-light"></i>
+                            No customers found.
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="customerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            
+            <div class="modal-header border-bottom-0 pb-0">
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body text-center p-4">
+                
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 text-white fw-bold shadow-sm" 
+                     style="width: 80px; height: 80px; font-size: 32px; background-color: var(--blue);">
+                    {{ selectedCustomer.name ? (selectedCustomer.name.charAt(0) | uppercase) : '?' }}
+                </div>
+                
+                <h4 class="fw-bold mb-1">{{ selectedCustomer.name }}</h4>
+                <span class="badge bg-light text-secondary border mb-4 px-3 py-2 fw-normal" style="font-size: 13px;">
+                    <i class="bi bi-geo-alt-fill me-1"></i> {{ selectedCustomer.address || 'No City Provided' }}
+                </span>
+                
+                <div class="text-start bg-light rounded-3 p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <small class="text-secondary fw-bold text-uppercase" style="font-size:10px;">Phone</small>
+                            <div class="fw-semibold text-dark">{{ selectedCustomer.phone }}</div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-secondary fw-bold text-uppercase" style="font-size:10px;">Email</small>
+                            <div class="fw-semibold text-dark">{{ selectedCustomer.email || 'N/A' }}</div>
+                        </div>
+                        <div class="col-12 border-top pt-3 mt-3">
+                            <small class="text-secondary fw-bold text-uppercase" style="font-size:10px;">Total Spent</small>
+                            <div class="text-success fw-bold fs-5">{{ selectedCustomer.total_spent | currency : "EGP " }}</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

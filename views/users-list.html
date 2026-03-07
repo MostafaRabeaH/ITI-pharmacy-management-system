@@ -1,0 +1,132 @@
+<div>
+    <nav class="navbar border">
+        <div class="container-fluid">
+            <div>
+                <h5 class="fw-bold">Usrers</h5>
+                <small class="text-muted">{{ users.length }} total records</small>
+            </div>
+            <div class="d-flex align-items-center gap-3 ms-auto">
+
+                <select class="form-select border-0 text-secondary bg-light" style="width: 150px;"
+                    ng-model="filterRole">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="cashier">Cashier</option>
+                </select>
+
+                <div class="input-group" style="width: 250px;">
+                    <span class="input-group-text bg-light">
+                        <i class="bi bi-search text-muted" style="font-size: 13px;"></i>
+                    </span>
+                    <input type="text" class="form-control bg-light border-start-0" placeholder="Search Users..."
+                        ng-model="searchQuery">
+                </div>
+
+                <button class="btn btn-light position-relative rounded-circle" style="width:38px; height:38px;">
+                    <i class="bi bi-bell"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="card border rounded-3 mt-3 bg-white">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2>All Users</h2>
+                <a href="#!/user-form" class="btn btn-primary"> + Add User</a>
+            </div>
+
+            <div class="table-responsive" ng-if="users.length > 0 && getPagedUsers().length > 0">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Role</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="user in getPagedUsers()">
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>{{ user.created_at | date:'dd-MM-yyyy'}}</td>
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm" ng-click="editUser(user)">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" ng-click="deleteUser(user.id)"><i
+                                        class="bi bi-trash"></i></button>
+                                <button class="btn btn-outline-secondary btn-sm" ng-click="viewUser(user)">
+                                    <i class="bi bi-eye"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex align-items-center justify-content-end gap-1">
+                    <button class="btn btn-light btn-sm" ng-click="goToPage(currentPage - 1)"
+                        ng-disabled="currentPage === 1" style="width: 32px; height: 32px; padding: 0;">
+                        <i class="bi bi-chevron-left" style="font-size: 12px;"></i>
+                    </button>
+                    <button ng-repeat="page in getPages()" ng-click="goToPage(page)" class="btn btn-sm"
+                        ng-class="currentPage === page ? 'btn-primary' : 'btn-light'"
+                        style="width: 32px; height: 32px; padding: 0; font-size: 13px;">
+                        {{ page }}
+                    </button>
+                    <button class="btn btn-light btn-sm" ng-click="goToPage(currentPage + 1)"
+                        ng-disabled="currentPage === totalPages()" style="width: 32px; height: 32px; padding: 0;">
+                        <i class="bi bi-chevron-right" style="font-size: 12px;"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="text-center text-secondary"
+                ng-if="users.length === 0 || getPagedUsers().length === 0 && !isLoading">No users found</p>
+        </div>
+    </div>
+
+    <div ng-show="showModal"
+        class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+        style="background: rgba(0,0,0,0.5); z-index: 1000;" ng-click="closeModal()">
+
+        <div ng-click="$event.stopPropagation()" class="bg-white rounded-3 shadow-lg overflow-hidden"
+            style="width: 480px; max-width: 90%;">
+            <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div>
+                    <div class="fw-bold fs-6">{{ selectedUser.role }}</div>
+                    <div class="text-muted small">{{ selectedUser.username }}</div>
+                </div>
+                <button ng-click="closeModal()" class="btn btn-light btn-sm rounded-circle"
+                    style="width:32px; height:32px;">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="row g-3">
+
+                    <div class="col-6">
+                        <div class="bg-light rounded-3 p-3">
+                            <div class="text-muted text-uppercase fw-semibold mb-1" style="font-size: 11px;">Username
+                            </div>
+                            <div class="fw-semibold small">{{ selectedUser.username }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="bg-light rounded-3 p-3">
+                            <div class="text-muted text-uppercase fw-semibold mb-1" style="font-size: 11px;">Role</div>
+                            <div class="fw-semibold small">{{ selectedUser.role }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="bg-light rounded-3 p-3">
+                            <div class="text-muted fw-semibold mb-1" style="font-size: 11px;">Created At</div>
+                            <div class="fw-semibold small">{{ selectedUser.created_at | date }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

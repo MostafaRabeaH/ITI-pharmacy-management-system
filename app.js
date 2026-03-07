@@ -13,6 +13,10 @@ app.run(function ($rootScope, $location, $window) {
         $location.path('/login');
     };
 
+<<<<<<< Updated upstream
+    $rootScope.$on('$routeChangeSuccess', function () {
+        $rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+=======
     // Sidebar State and Toggle logic
     $rootScope.isSidebarOpen = false;
     $rootScope.windowWidth = $window.innerWidth;
@@ -29,14 +33,12 @@ app.run(function ($rootScope, $location, $window) {
         $rootScope.isSidebarOpen = !$rootScope.isSidebarOpen;
     };
 
+    // Close sidebar on navigation on mobile
     $rootScope.$on('$routeChangeSuccess', function () {
-        // From upstream: update current user state on route change
-        $rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        
-        // From stash: close sidebar on navigation on mobile
         if ($rootScope.windowWidth <= 768 && $rootScope.isSidebarOpen) {
             $rootScope.isSidebarOpen = false;
         }
+>>>>>>> Stashed changes
     });
 
     $rootScope.$on('$routeChangeStart', function (event, next) {

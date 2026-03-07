@@ -6,33 +6,16 @@
           <span class="input-group-text bg-light border-end-0 text-secondary">
             <i class="bi bi-search"></i>
           </span>
-          <input
-            type="text"
-            class="form-control bg-light border-start-0 shadow-none"
-            placeholder="Search by name, phone..."
-            ng-model="searchCustomer"
-            ng-change="currentPage = 1"
-          />
+          <input type="text" class="form-control bg-light border-start-0 shadow-none" placeholder="Search by name or phone" ng-model="searchCustomer" ng-change="currentPage = 1" />
         </div>
 
-        <select
-          class="form-select text-secondary bg-light border-0 shadow-none ms-2"
-          style="width: 120px"
-          ng-model="pageSize"
-          ng-options="size as (size + ' / page') for size in pageSizeOptions"
-          ng-change="onPageSizeChange()"
-        ></select>
+        <select class="form-select text-secondary bg-light border-0 shadow-none ms-2" style="width: 120px" ng-model="pageSize" ng-options="size as (size + ' / page') for size in pageSizeOptions" ng-change="onPageSizeChange()"></select>
       </div>
 
       <div class="d-flex gap-2">
         <div class="d-flex align-items-center gap-1">
           <label class="text-secondary small fw-semibold text-nowrap" style="font-size: 12px;">Filter by City</label>
-          <select
-            class="form-select text-secondary bg-light border-0 shadow-none"
-            style="width: 140px"
-            ng-model="filterCity"
-            ng-change="currentPage = 1"
-          >
+          <select class="form-select text-secondary bg-light border-0 shadow-none" style="width: 140px" ng-model="filterCity" ng-change="currentPage = 1">
             <option value="">All Cities</option>
             <option value="Cairo">Cairo</option>
             <option value="Giza">Giza</option>
@@ -49,23 +32,14 @@
 
         <div class="d-flex align-items-center gap-1">
           <label class="text-secondary small fw-semibold text-nowrap" style="font-size: 12px;">Sort by Spent</label>
-          <select
-            class="form-select text-secondary bg-light border-0 shadow-none"
-            style="width: 170px"
-            ng-model="sortCustomers"
-            ng-change="currentPage = 1"
-          >
-            <option value="">Default</option>
-            <option value="-total_spent">Highest first</option>
-            <option value="total_spent">Lowest first</option>
+          <select  class="form-select text-secondary bg-light border-0 shadow-none" style="width: 170px" ng-model="sortCustomers" ng-change="currentPage = 1">
+            <option value="">Sort by (None)</option>
+            <option value="-total_spent">Highest Spent first</option>
+            <option value="total_spent">Lowest Spent first</option>
           </select>
         </div>
 
-        <a
-          href="#!/customers-form"
-          class="btn text-white d-flex align-items-center gap-2 px-3"
-          style="background-color: var(--blue)"
-        >
+        <a href="#!/customers-form" class="btn text-white d-flex align-items-center gap-2 px-3" style="background-color: var(--blue)">
           <i class="bi bi-person-plus-fill"></i> Add Customer
         </a>
       </div>

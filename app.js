@@ -1,6 +1,6 @@
 var app = angular.module('pharmaApp', ['ngRoute']);
 
-app.run(function ($rootScope, $location) {
+app.run(function ($rootScope, $location, $window) {
 
     var cashierRoutes = ['/pos', '/customers-list', '/customers-form', '/invoices-history' , '/dashboard' , '/medicines-list'];
 
@@ -66,7 +66,7 @@ app.config(function ($routeProvider) {
         })
         .when('/invoices-history', {
             templateUrl: 'views/invoices-history.html',
-            controller: 'posController'
+            controller: 'invoiceController'
         })
         .when('/pos', {
             templateUrl: 'views/pos.html',

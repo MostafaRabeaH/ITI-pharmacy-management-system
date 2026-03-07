@@ -13,7 +13,8 @@
                 <br>Pharma<span style="color:var(--blue)">Care</span> is your trusted partner in health care. <br>We
                 delivering
                 reliable care,
-                expert support, <br>and everything you need, right when you need it.</h5>
+                expert support, <br>and everything you need, right when you need it.
+            </h5>
 
             <p class="mt-auto mb-0 text-center text-secondary">Terms of Use | Privacy Policy</p>
         </div>
@@ -24,22 +25,18 @@
             <p class="text-muted mb-4" style="font-size: 14px;">Please select your role to continue</p>
 
             <div class="btn-group w-100 mb-4" role="group">
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" 
-        autocomplete="off" 
-        ng-model="credentials.role" 
-        value="Admin" checked>
-    <label class="btn btn-outline-primary rounded-start-3" for="btnradio1">
-        <i class="bi bi-shield-lock-fill me-1"></i> Admin
-    </label>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                    ng-model="credentials.role" value="Admin" checked>
+                <label class="btn btn-outline-primary rounded-start-3" for="btnradio1">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Admin
+                </label>
 
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" 
-        autocomplete="off"
-        ng-model="credentials.role" 
-        value="Cashier">
-    <label class="btn btn-outline-primary rounded-end-3" for="btnradio2">
-        <i class="bi bi-person-fill me-1"></i> Cashier
-    </label>
-</div>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
+                    ng-model="credentials.role" value="Cashier">
+                <label class="btn btn-outline-primary rounded-end-3" for="btnradio2">
+                    <i class="bi bi-person-fill me-1"></i> Cashier
+                </label>
+            </div>
             <form name="loginForm" novalidate>
                 <label for="username" class="form-label fw-semibold" style="font-size:14px;">Username</label>
                 <div class="input-group mb-1">
@@ -68,15 +65,14 @@
                 </small>
                 <br>
                 <div class="alert alert-danger py-2 mb-3" ng-show="errorMessage" style="font-size: 13px;">
-    <i class="bi bi-exclamation-circle me-1"></i> {{ errorMessage }}
-</div>
+                    <i class="bi bi-exclamation-circle me-1"></i> {{ errorMessage }}
+                </div>
 
-<button type="submit" class="btn btn-primary w-100 py-2 fw-semibold text-white"
-    ng-click="login(loginForm)"
-    ng-disabled="loginForm.$invalid || loading">
-    <span ng-if="loading"><i class="bi bi-hourglass-split me-2"></i>Logging in...</span>
-    <span ng-if="!loading"><i class="bi bi-box-arrow-in-right me-2"></i>Login</span>
-</button>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold text-white"
+                    ng-click="login(loginForm)" ng-disabled="loginForm.$invalid || loading">
+                    <span ng-if="loading"><i class="bi bi-hourglass-split me-2"></i>Logging in...</span>
+                    <span ng-if="!loading"><i class="bi bi-box-arrow-in-right me-2"></i>Login</span>
+                </button>
             </form>
             <p class="text-muted text-center mt-auto mb-0" style="font-size: 11px;">
                 &copy; 2024 PharmaCare. All rights reserved.

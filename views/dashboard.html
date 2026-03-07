@@ -1,0 +1,117 @@
+<div>
+    <nav class="navbar border">
+        <div class="container-fluid">
+            <div>
+                <h5 class="fw-bold">Welcome</h5>
+                <small class="text-muted">{{today | date:'fullDate'}}</small>
+            </div>
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <div class="input-group" style="width: 250px;">
+                    <span class="input-group-text bg-light">
+                        <i class="bi bi-search text-muted" style="font-size: 13px;"></i>
+                    </span>
+                    <input type="text" class="form-control bg-light border-start-0" placeholder="Search..."
+                        ng-model="searchQuery">
+                </div>
+                <button class="btn btn-light position-relative rounded-circle" style="width:38px; height:38px;">
+                    <i class="bi bi-bell"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="p-4">
+        <div class="row g-3 mb-4">
+            <div class="col-3">
+                <div class="bg-white rounded-3 p-3 shadow" style="border: 1px solid #8bef7e;">
+                    <i class="bi bi-cash fs-3" style="color: #8bef7e;"></i>
+                    <h5 class="fw-bold mt-3">{{ todayRevenue | currency:"$" }}</h5>
+                    <p class="text-muted mb-0">Today's Revenue</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="bg-white rounded-3 p-3 shadow" style="border: 1px solid #87a0e6;">
+                    <i class="bi bi-receipt fs-3" style="color: #6f90e9;"></i>
+                    <h5 class="fw-bold mt-3">{{ todayInvoices }}</h5>
+                    <p class="text-muted mb-0">Invoices Today</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="bg-white rounded-3 p-3 shadow" style="border: 1px solid #ffd35a;">
+                    <i class="bi bi-box-seam fs-3" style="color: #ffd35a;"></i>
+                    <h5 class="fw-bold mt-3">{{ lowStock }}</h5>
+                    <p class="text-muted mb-0">Low Stock</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="bg-white rounded-3 p-3 shadow" style="border: 1px solid #ef7575;">
+                    <i class="bi bi-calendar2-x fs-3" style="color: #ef7575;"></i>
+                    <h5 class="fw-bold mt-3">{{ expiredCount }}</h5>
+                    <p class="text-muted mb-0">Expired Medicines</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-8">
+                <div class="bg-white rounded-3 border p-4 h-100">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="bg-white rounded-3 border overflow-hidden h-100">
+                    <div class="border-bottom px-4 py-2">
+                        <span class="fw-semibold">Quick Access</span>
+                    </div>
+                    <div class="p-4">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <a href="#!/pos" class="text-decoration-none text-dark">
+                                    <div class="text-center rounded-3 p-3"
+                                        style="background-color: #f5f8ff; cursor:pointer;">
+                                        <i class="bi bi-plus-circle-fill fs-3" style="color: #739ff7;"></i>
+                                        <p class="mb-0">New Invoice</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#!/medicine-form" class="text-decoration-none text-dark"
+                                    ng-if="currentUser.role === 'Admin'">
+                                    <div class="text-center rounded-3 p-3"
+                                        style="background-color: #f2fcf6; cursor:pointer;">
+                                        <i class="bi bi-capsule-pill fs-3" style="color:#26c666;"></i>
+                                        <p class="mb-0">Add Medicine</p>
+                                    </div>
+                                </a>
+                                <div ng-if="currentUser.role !== 'Admin'" class="text-center rounded-3 p-3 opacity-50"
+                                    style="background-color: #f2fcf6; cursor:not-allowed;">
+                                    <i class="bi bi-capsule-pill fs-3" style="color:#26c666;"></i>
+                                    <p class="mb-0">Add Medicine</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <a href="#!/customers-form" class="text-decoration-none text-dark">
+                                    <div class="text-center rounded-3 p-3"
+                                        style="background-color: #fef9f1; cursor:pointer;">
+                                        <i class="bi bi-person-plus-fill fs-3" style="color: #f5a115;"></i>
+                                        <p class="mb-0">Add Customer</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#!/medicines-list" class="text-decoration-none text-dark">
+                                    <div class="text-center rounded-3 p-3"
+                                        style="background-color: #fef4f4; cursor:pointer;">
+                                        <i class="bi bi-box-seam-fill fs-3" style="color: #ef7575;"></i>
+                                        <p class="mb-0">Stock Check</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

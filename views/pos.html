@@ -1,10 +1,17 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="fw-bold mb-1">Point of Sale</h4>
-        <span class="text-secondary small">Create new invoice</span>
+<nav class="navbar border">
+    <div class="container-fluid">
+        <div>
+            <h5 class="fw-bold">Point of Sale</h5>
+            <small class="text-muted">Create new invoice</small>
+        </div>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            <button class="btn btn-light bg-white border shadow-sm text-danger fw-semibold px-3" ng-click="resetPOS()">Reset POS</button>
+            <button class="btn btn-light position-relative rounded-circle" style="width:38px; height:38px;">
+                <i class="bi bi-bell"></i>
+            </button>
+        </div>
     </div>
-    <button class="btn btn-light bg-white border shadow-sm text-danger fw-semibold px-3" ng-click="resetPOS()"> Reset POS </button>
-</div>
+</nav>
 
 <div class="row g-4">
     

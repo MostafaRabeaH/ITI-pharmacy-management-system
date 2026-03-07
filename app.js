@@ -2,12 +2,21 @@ var app = angular.module('pharmaApp', ['ngRoute']);
 
 app.run(function ($rootScope, $location) {
 
-    var cashierRoutes = ['/pos', '/customers-list', '/customers-form', '/invoices-history'];
-    $rootScope.logout = function() {
+    var cashierRoutes = ['/pos', '/customers-list', '/customers-form', '/invoices-history' , '/dashboard' , '/medicines-list'];
+
+    $rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    $rootScope.logout = function () {
         localStorage.removeItem('currentUser');
+        $rootScope.currentUser = null;
         window.history.replaceState(null, null, window.location.href);
         $location.path('/login');
     };
+
+    $rootScope.$on('$routeChangeSuccess', function () {
+        $rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    });
+
     $rootScope.$on('$routeChangeStart', function (event, next) {
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         var path = $location.path();
@@ -20,11 +29,7 @@ app.run(function ($rootScope, $location) {
 
         if (currentUser && path === '/login') {
             event.preventDefault();
-            if (currentUser.role === 'Admin') {
-                $location.path('/dashboard');
-            } else {
-                $location.path('/pos');
-            }
+            $location.path(currentUser.role === 'Admin' ? '/dashboard' : '/pos');
             return;
         }
 
@@ -53,7 +58,11 @@ app.config(function ($routeProvider) {
         })
         .when('/medicines-list', {
             templateUrl: 'views/medicines-list.html',
-            controller: 'medicineController'
+            controller: 'medicinesController'
+        })
+        .when('/medicine-form', {
+            templateUrl: 'views/medicine-form.html',
+            controller: 'medicinesController'
         })
         .when('/invoices-history', {
             templateUrl: 'views/invoices-history.html',
@@ -71,15 +80,21 @@ app.config(function ($routeProvider) {
             templateUrl: 'views/customers-form.html',
             controller: 'customerController'
         })
-        .when('/medicines-form', {
-            templateUrl: 'views/medicines-form.html',
-            controller: 'medicineController'
-        })
+        
         .when('/login', {
             templateUrl: 'views/login.html',
+            controller: 'authController'
+        })
+        .when('/users-list', {
+            templateUrl: 'views/users-list.html',
+            controller: 'authController'
+        })
+        .when('/user-form', {
+            templateUrl: 'views/user-form.html',
             controller: 'authController'
         })
         .otherwise({
             redirectTo: '/login'
         });
 });
+

@@ -1,0 +1,192 @@
+<div>
+    <nav class="navbar border">
+        <div class="container-fluid">
+            <div>
+                <h5 class="fw-bold" ng-if="!isEdit">Add Medicine</h5>
+                <h5 class="fw-bold" ng-if="isEdit">Edit Medicine</h5>
+                <small class="text-muted">Medicines &rarr; {{ isEdit ? 'Edit' : 'Add' }}</small>
+            </div>
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <button class="btn btn-light position-relative rounded-circle" style="width:38px; height:38px;">
+                    <i class="bi bi-bell"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="p-4">
+        <form name="medicineForm" novalidate>
+            <div class="row g-4">
+                <div class="col">
+                    <div class="bg-white rounded-3 border overflow-hidden">
+                        <div class="d-flex align-items-center gap-2 px-4 py-3 border-bottom">
+                            <i class="bi bi-capsule-pill" style="color: #4F8EF7;"></i>
+                            <span class="fw-semibold" style="font-size: 14px;">Medicine Info</span>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="text-uppercase fw-bold text-secondary mb-3"
+                                style="font-size: 11px; letter-spacing: 0.5px;">Basic</div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold small">Name *</label>
+                                    <input type="text" name="name" class="form-control" ng-model="newMedicineData.name"
+                                        placeholder="e.g. Amoxicillin" required
+                                        ng-class="{'is-invalid': medicineForm.name.$touched && medicineForm.name.$invalid}">
+                                    <div class="invalid-feedback">Name is required</div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold small">Scientific Name *</label>
+                                    <input type="text" name="scientific_name" class="form-control"
+                                        ng-model="newMedicineData.scientific_name"
+                                        placeholder="e.g. Amoxicillin Trihydrate" required
+                                        ng-class="{'is-invalid': medicineForm.scientific_name.$touched && medicineForm.scientific_name.$invalid}">
+                                    <div class="invalid-feedback">Scientific Name is required</div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-4">
+                                    <label class="form-label fw-semibold small">Category *</label>
+                                    <select name="category" class="form-select" ng-model="newMedicineData.category"
+                                        required
+                                        ng-class="{'is-invalid': medicineForm.category.$touched && medicineForm.category.$invalid}">
+                                        <option value="">Select…</option>
+                                        <option value="antibiotics">Antibiotics</option>
+                                        <option value="analgesics">Analgesics</option>
+                                        <option value="vitamins">Vitamins</option>
+                                        <option value="digestive">Digestive</option>
+                                        <option value="dermatology">Dermatology</option>
+                                    </select>
+                                    <div class="invalid-feedback">Category is required</div>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label fw-semibold small">Dosage Form *</label>
+                                    <select name="dosage_form" class="form-select"
+                                        ng-model="newMedicineData.dosage_form" required
+                                        ng-class="{'is-invalid': medicineForm.dosage_form.$touched && medicineForm.dosage_form.$invalid}">
+                                        <option value="">Select…</option>
+                                        <option value="tablet">Tablet</option>
+                                        <option value="capsule">Capsule</option>
+                                        <option value="syrup">Syrup</option>
+                                        <option value="injection">Injection</option>
+                                        <option value="cream">Cream</option>
+                                        <option value="drops">Drops</option>
+                                    </select>
+                                    <div class="invalid-feedback">Dosage form is required</div>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label fw-semibold small">Strength *</label>
+                                    <input type="text" name="strength" class="form-control"
+                                        ng-model="newMedicineData.strength" placeholder="e.g. 500mg" required
+                                        ng-class="{'is-invalid': medicineForm.strength.$touched && medicineForm.strength.$invalid}">
+                                    <div class="invalid-feedback">Strength is required</div>
+                                </div>
+                            </div>
+
+                            <div class="text-uppercase fw-bold text-secondary mb-3"
+                                style="font-size: 11px; letter-spacing: 0.5px;">Unit & Pricing</div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Unit Type *</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <label ng-repeat="unit in ['Box','Strip','bottle','piece']"
+                                        class="d-flex align-items-center gap-2 px-3 py-2 border rounded-3 cursor-pointer fw-medium small"
+                                        ng-class="newMedicineData.unit_type === unit ? 'border-primary text-primary' : 'border'"
+                                        style="cursor: pointer;">
+                                        <input type="radio" name="ut" ng-model="newMedicineData.unit_type"
+                                            ng-value="unit" style="accent-color: #4F8EF7;">
+                                        {{ unit }}
+                                    </label>
+                                </div>
+                                <div class="text-danger mt-1" style="font-size: 11px;"
+                                    ng-show="formSubmitted && !newMedicineData.unit_type">
+                                    Unit type is required
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold small">Price *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">$</span>
+                                        <input type="number" name="price" class="form-control"
+                                            ng-model="newMedicineData.price" placeholder="0.00" required min="0"
+                                            ng-class="{'is-invalid': medicineForm.price.$touched && medicineForm.price.$invalid}">
+                                        <div class="invalid-feedback">
+                                            <span ng-show="medicineForm.price.$error.required">Price is required</span>
+                                            <span ng-show="medicineForm.price.$error.min">Price must be 0 or more</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold small">Quantity *</label>
+                                    <input type="number" name="stock" class="form-control"
+                                        ng-model="newMedicineData.stock" placeholder="0" required min="0"
+                                        ng-class="{'is-invalid': medicineForm.stock.$touched && medicineForm.stock.$invalid}">
+                                    <div class="invalid-feedback">
+                                        <span ng-show="medicineForm.stock.$error.required">Quantity is required</span>
+                                        <span ng-show="medicineForm.stock.$error.min">Quantity must be 0 or more</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-uppercase fw-bold text-secondary mb-3"
+                                style="font-size: 11px; letter-spacing: 0.5px;">Dates & Storage</div>
+
+                            <div class="row g-3 mb-2">
+                                <div class="col-4">
+                                    <label class="form-label fw-semibold small">Expiry Date *</label>
+                                    <input type="date" name="expiry_date" class="form-control"
+                                        ng-model="newMedicineData.expiry_date" required
+                                        ng-class="{'is-invalid': medicineForm.expiry_date.$touched && medicineForm.expiry_date.$invalid}">
+                                    <div class="invalid-feedback">Expiry date is required</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-auto" style="width: 300px;">
+                    <div class="bg-white rounded-3 border overflow-hidden mb-3">
+                        <div class="px-3 py-2 border-bottom">
+                            <span class="fw-semibold small">Image <span
+                                    class="text-muted fw-normal">(optional)</span></span>
+                        </div>
+                        <div class="p-3">
+                            <div ng-if="newMedicineData.image_url" class="mb-3 text-center">
+                                <img ng-src="{{ newMedicineData.image_url }}" class="rounded-2 border"
+                                    style="height: 120px; max-width: 100%; object-fit: contain;">
+                                <div class="text-muted mt-1" style="font-size: 11px;">Current image</div>
+                            </div>
+                            <label for="imageUpload"
+                                class="border border-2 border-dashed rounded-3 p-4 text-center d-block"
+                                style="cursor: pointer; border-style: dashed !important;">
+                                <i class="bi bi-cloud-arrow-up d-block mb-2 text-muted fs-4"></i>
+                                <div class="fw-semibold small text-dark">
+                                    {{ selectedFileName || (isEdit ? 'Click to replace image' : 'Drop or click') }}
+                                </div>
+                                <div class="text-muted mt-1" style="font-size: 11px;">PNG, JPG · max 2 MB</div>
+                                <input type="file" id="imageUpload" accept="image/*" class="d-none"
+                                    onchange="angular.element(this).scope().onFileSelected(this)">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger py-2 small mb-3" ng-show="formSubmitted && medicineForm.$invalid">
+                        <i class="bi bi-exclamation-circle me-1"></i> Please fill in all required fields
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" ng-click="cancelEdit()" class="btn btn-outline-secondary flex-fill">
+                            Cancel
+                        </button>
+                        <button type="button" ng-click="submitForm(medicineForm)" class="btn btn-primary flex-fill">
+                            <span ng-if="isEdit">Update Medicine</span>
+                            <span ng-if="!isEdit">Save Medicine</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

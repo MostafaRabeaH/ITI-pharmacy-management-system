@@ -1,4 +1,4 @@
-app.controller ('customerController', function($scope,customerService,$routeParams, $location ){
+app.controller ('customerController', function($scope,customerService, invoiceService, $routeParams, $location ){
 
     $scope.customers = [];
     $scope.selectedCustomer ={};
@@ -7,17 +7,45 @@ app.controller ('customerController', function($scope,customerService,$routePara
     $scope.pageSize = 10 ;
     $scope.pageSizeOptions = [5, 10, 15, 20, 25, 50];
 
-    $scope.loadCustomers = ()=>{
-            $scope.isLoading = true ;
-        customerService.getAllCustomers()
-        .then (function(response){
-            $scope.customers = response.data;
-            $scope.isLoading= false;
+    
+    $scope.loadCustomers = function() { 
+        $scope.isLoading = true;
+        // 1st getting customers data 
+    customerService.getAllCustomers()
+        .then(function(custResponse) {
+        let customers = custResponse.data;
+        
+        // then fetching invoices data from invoiceService to calc the total spent per customer 
+        invoiceService.getAllInvoices()
+        .then(function(invResponse) {
+            let invoices = invResponse.data ; // the returned data form the service  stored in a varibale 
+
+            // looping over the invoices to get the sum spent per customer 
+            let spentByCustomer = {}; 
+            for (let i = 0; i < invoices.length; i++) {
+                let invoice = invoices[i];
+                if (invoice.customer_id) {
+
+                    let currentTotal = spentByCustomer[invoice.customer_id] || 0;
+                    let invoiceAmount = invoice.total_amount || 0;
+
+                    spentByCustomer[invoice.customer_id] = currentTotal + invoiceAmount;
+                }
+            }
+
+            // adding total for  each customer in the customers array 
+            for (let j = 0; j < customers.length; j++) {
+                let customer = customers[j];
+                customer.total_spent = spentByCustomer[customer.id] || 0;
+            }
+            $scope.customers = customers;
+            $scope.isLoading = false;
         })
-        .catch(function(error){
-            console.error("Error loading data ", error)
-             $scope.isLoading= false; 
+        .catch(function(err){
+            console.error("Error loading customers: ", err);
+            $scope.isLoading= false;
         });
+        })
 
     };
 
@@ -25,7 +53,7 @@ app.controller ('customerController', function($scope,customerService,$routePara
 
     // pagination 
     $scope.totalPages = function(totalItems){
-        return Math.ceil(totalItems / $scope.pageSize) || 1;
+        return Math.ceil(totalItems / $scope.pageSize) || 1; 
     };
 
     $scope.nextPage = function(totalItems){
@@ -42,16 +70,6 @@ app.controller ('customerController', function($scope,customerService,$routePara
 
     $scope.onPageSizeChange = function() {
         $scope.currentPage = 1;
-    };
-
-    $scope.showingFrom = function(totalItems) {
-        if (totalItems === 0) return 0;
-        return (($scope.currentPage - 1) * $scope.pageSize) + 1;
-    };
-
-    $scope.showingTo = function(totalItems) {
-        var end = $scope.currentPage * $scope.pageSize;
-        return end > totalItems ? totalItems : end;
     };
 
     $scope.deleteCustomer = function(customerId){

@@ -1,6 +1,6 @@
 var app = angular.module('pharmaApp', ['ngRoute']);
 
-app.run(function ($rootScope, $location) {
+app.run(function ($rootScope, $location, $window) {
 
     var cashierRoutes = ['/pos', '/customers-list', '/customers-form', '/invoices-history' , '/dashboard' , '/medicines-list'];
 
@@ -13,8 +13,30 @@ app.run(function ($rootScope, $location) {
         $location.path('/login');
     };
 
+    // Sidebar State and Toggle logic
+    $rootScope.isSidebarOpen = false;
+    $rootScope.windowWidth = $window.innerWidth;
+
+    angular.element($window).bind('resize', function() {
+        $rootScope.windowWidth = $window.innerWidth;
+        if ($rootScope.windowWidth > 768) {
+            $rootScope.isSidebarOpen = false; // reset when maximizing window
+        }
+        $rootScope.$applyAsync();
+    });
+
+    $rootScope.toggleSidebar = function() {
+        $rootScope.isSidebarOpen = !$rootScope.isSidebarOpen;
+    };
+
     $rootScope.$on('$routeChangeSuccess', function () {
+        // From upstream: update current user state on route change
         $rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        // From stash: close sidebar on navigation on mobile
+        if ($rootScope.windowWidth <= 768 && $rootScope.isSidebarOpen) {
+            $rootScope.isSidebarOpen = false;
+        }
     });
 
     $rootScope.$on('$routeChangeStart', function (event, next) {
@@ -66,7 +88,7 @@ app.config(function ($routeProvider) {
         })
         .when('/invoices-history', {
             templateUrl: 'views/invoices-history.html',
-            controller: 'posController'
+            controller: 'invoiceController'
         })
         .when('/pos', {
             templateUrl: 'views/pos.html',

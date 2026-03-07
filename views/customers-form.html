@@ -1,7 +1,16 @@
-<div class="mb-4">
-    <h4 class="fw-bold mb-1">{{ customerId ? 'Edit Customer' : 'Add Customer' }}</h4>
-    <span class="text-secondary small">Customers &rarr; {{ customerId ? 'Edit' : 'Add' }}</span>
-</div>
+<nav class="navbar border">
+    <div class="container-fluid">
+        <div>
+            <h5 class="fw-bold">{{ customerId ? 'Edit Customer' : 'Add Customer' }}</h5>
+            <small class="text-muted">Customers &rarr; {{ customerId ? 'Edit' : 'Add' }}</small>
+        </div>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            <button class="btn btn-light position-relative rounded-circle" style="width:38px; height:38px;">
+                <i class="bi bi-bell"></i>
+            </button>
+        </div>
+    </div>
+</nav>
 
 <form ng-submit="saveCustomer()">
     <div class="row justify-content-center">

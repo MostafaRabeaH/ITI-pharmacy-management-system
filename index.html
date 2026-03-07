@@ -31,9 +31,7 @@
 
 <body ng-app="pharmaApp">
 
-    <aside class="sidebar d-flex flex-column p-3" 
-           ng-class="{'show-sidebar': isSidebarOpen}"
-           ng-hide="isLoginPage()">
+    <aside class="sidebar d-flex flex-column p-3" ng-hide="isLoginPage()">
 
         <div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom border-secondary">
             <div class="rounded-2 d-flex align-items-center justify-content-center text-white"
@@ -93,27 +91,7 @@
             </div>
         </div>
     </aside>
-<<<<<<< Updated upstream
     <main ng-style="isLoginPage() ? {} : {'margin-left': '240px'}">
-=======
-
-    <div class="sidebar-overlay" 
-         ng-class="{'show': isSidebarOpen}" 
-         ng-click="toggleSidebar()"
-         ng-hide="isLoginPage()">
-    </div>
-
-    <main ng-style="isLoginPage() ? {} : {'margin-left': windowWidth > 768 ? '240px' : '0'}" 
-          style="padding: 20px; min-height: 100vh; transition: margin-left 0.3s ease-in-out;">
-        
-        <div class="d-md-none mb-3 d-flex align-items-center" ng-hide="isLoginPage()">
-            <button class="btn btn-light shadow-sm text-secondary me-3" ng-click="toggleSidebar()">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-            <h5 class="fw-bold mb-0">Pharma<span style="color:var(--blue)">Care</span></h5>
-        </div>
-
->>>>>>> Stashed changes
         <div ng-view></div>
     </main>
 

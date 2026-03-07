@@ -13,32 +13,8 @@ app.run(function ($rootScope, $location, $window) {
         $location.path('/login');
     };
 
-<<<<<<< Updated upstream
     $rootScope.$on('$routeChangeSuccess', function () {
         $rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-=======
-    // Sidebar State and Toggle logic
-    $rootScope.isSidebarOpen = false;
-    $rootScope.windowWidth = $window.innerWidth;
-
-    angular.element($window).bind('resize', function() {
-        $rootScope.windowWidth = $window.innerWidth;
-        if ($rootScope.windowWidth > 768) {
-            $rootScope.isSidebarOpen = false; // reset when maximizing window
-        }
-        $rootScope.$applyAsync();
-    });
-
-    $rootScope.toggleSidebar = function() {
-        $rootScope.isSidebarOpen = !$rootScope.isSidebarOpen;
-    };
-
-    // Close sidebar on navigation on mobile
-    $rootScope.$on('$routeChangeSuccess', function () {
-        if ($rootScope.windowWidth <= 768 && $rootScope.isSidebarOpen) {
-            $rootScope.isSidebarOpen = false;
-        }
->>>>>>> Stashed changes
     });
 
     $rootScope.$on('$routeChangeStart', function (event, next) {

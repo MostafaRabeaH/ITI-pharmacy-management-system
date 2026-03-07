@@ -1,0 +1,77 @@
+<div>
+    <nav class="navbar border">
+        <div class="container-fluid">
+            <div>
+                <h5 class="fw-bold" ng-if="!isEdit">Add User</h5>
+                <h5 class="fw-bold" ng-if="isEdit">Edit User</h5>
+                <small class="text-muted">Users &rarr; {{ isEdit ? 'Edit' : 'Add' }}</small>
+            </div>
+            <div class="d-flex align-items-center gap-3 ms-auto">
+                <button class="btn btn-light position-relative rounded-circle" style="width:38px; height:38px;">
+                    <i class="bi bi-bell"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="p-4">
+        <form name="userForm" novalidate>
+            <div class="bg-white rounded-3 border overflow-hidden">
+                <div class="d-flex align-items-center gap-2 px-4 py-3 border-bottom">
+                    <i class="bi bi-person" style="color: #4F8EF7;"></i>
+                    <span class="fw-semibold" style="font-size: 14px;">User Info</span>
+                </div>
+
+                <div class="p-4">
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Username *</label>
+                            <input type="text" name="username" class="form-control" ng-model="newUserData.username"
+                                placeholder="Enter username" required ng-blur="checkUsername()"
+                                ng-class="{'is-invalid': (userForm.username.$touched && userForm.username.$invalid) || usernameExists}">
+                            <div class="invalid-feedback">
+                                <span ng-show="userForm.username.$error.required">Username is required</span>
+                                <span ng-show="usernameExists">Username already exists</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Password *</label>
+                            <input type="password" name="password" class="form-control" ng-model="newUserData.password"
+                                placeholder="Enter password" required ng-minlength="6"
+                                ng-class="{'is-invalid': userForm.password.$touched && userForm.password.$invalid}">
+                            <div class="invalid-feedback">
+                                <span ng-show="userForm.password.$error.required">Password is required</span>
+                                <span ng-show="userForm.password.$error.minlength">Minimum 6 characters</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Role *</label>
+                            <select name="role" class="form-select" ng-model="newUserData.role" required
+                                ng-class="{'is-invalid': userForm.role.$touched && userForm.role.$invalid}">
+                                <option value="">Select…</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Cashier">Cashier</option>
+                            </select>
+                            <div class="invalid-feedback">Role is required</div>
+                        </div>
+
+                    </div>
+                    <div class="alert alert-danger py-2 small mb-3" ng-show="formSubmitted && userForm.$invalid">
+                        <i class="bi bi-exclamation-circle me-1"></i> Please fill in all required fields
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" ng-click="cancelEdit()" class="btn btn-outline-secondary flex-fill">
+                            Cancel
+                        </button>
+                        <button type="button" ng-click="submitForm(userForm)" class="btn btn-primary flex-fill">
+                            <span ng-if="isEdit">Update User</span>
+                            <span ng-if="!isEdit">Save User</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

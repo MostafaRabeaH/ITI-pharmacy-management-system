@@ -38,7 +38,7 @@ app.service("invoiceService", function($http) {
                 // Supabase returns an array  for the new invoice
                 const newInvoice = response.data[0]; 
                 
-                //  2- calclute the cart item that will be inserted in the invoicee_items using the new invoice_id form invoices 
+                //  2- map each cart item and attach the new invoice_id
                 const itemsToInsert = cartItems.map(function(item) {
                     return {
                         invoice_id: newInvoice.id,

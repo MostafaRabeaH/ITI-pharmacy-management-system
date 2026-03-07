@@ -1,0 +1,288 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1">Point of Sale</h4>
+        <span class="text-secondary small">Create new invoice</span>
+    </div>
+    <button class="btn btn-light bg-white border shadow-sm text-danger fw-semibold px-3" ng-click="resetPOS()"> Reset POS </button>
+</div>
+
+<div class="row g-4">
+    
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-3 bg-white h-100">
+            <div class="card-body p-4">
+                
+                <div class="input-group mb-4 shadow-sm rounded-3">
+                    <span class="input-group-text bg-light border-0 text-secondary px-3">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control bg-light border-0 shadow-none py-2"  placeholder="Search by medicine name" 
+                           ng-model="searchMedicine">
+                </div>
+
+                <div class="text-center py-5" ng-if="isLoading">
+                    <div class="spinner-border text-primary" role="status" style="color: var(--blue);"></div>
+                    <div class="text-secondary mt-2">Loading inventory...</div>
+                </div>
+
+                <div class="row g-3" style="max-height: 60vh; overflow-y: auto;" ng-if="!isLoading">
+                    
+                    <div class="col-md-4 col-sm-6" ng-repeat="medicine in inventory | filter:searchMedicine">
+                        
+                        <div class="card h-100 border text-center p-3 shadow-sm" 
+                             style="cursor: pointer; transition: 0.2s;"
+                             ng-click="addToCart(medicine)"
+                             onmouseover="this.classList.add('border-primary')"
+                             onmouseout="this.classList.remove('border-primary')">
+                            
+                            <img ng-src="{{ medicine.image_url }}" alt="{{ medicine.name }}" 
+                                 class="img-fluid rounded-3 mx-auto mb-3" 
+                                 style="height: 60px; width: auto; object-fit: contain;"
+                                 ng-if="medicine.image_url">
+                                 
+                            <div class="rounded-3 bg-light d-flex align-items-center justify-content-center mx-auto mb-3" 
+                                 style="width: 60px; height: 60px;"
+                                 ng-if="!medicine.image_url">
+                                <i class="bi bi-capsule text-secondary fs-3"></i>
+                            </div>
+                            
+                            <h6 class="fw-bold mb-1 text-truncate" title="{{ medicine.name }}">{{ medicine.name }}</h6>
+                            <div class="text-success fw-bold">{{ medicine.price | currency:"EGP " }}</div>
+                            <div class="text-secondary small mt-1">Stock: {{ medicine.stock }}</div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 text-center py-4" ng-if="(inventory | filter:searchMedicine).length === 0">
+                        <i class="bi bi-box-seam fs-1 text-light d-block mb-2"></i>
+                        <span class="text-secondary">No medicines found.</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-3 bg-white h-100 d-flex flex-column">
+            
+            <div class="p-4 border-bottom bg-light rounded-top-3">
+                <label class="form-label fw-semibold small text-secondary mb-1">Select Customer <span class="text-danger">*</span></label>
+                
+                <div ng-if="sale.selectedCustomerId" class="d-flex justify-content-between align-items-center bg-white p-2 rounded-3 border shadow-sm py-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-person-check-fill text-success fs-5"></i>
+                        <div>
+                            <div class="fw-bold">{{ getSelectedCustomerName() }}</div>
+                            <div class="text-secondary small" style="font-size: 12px;">{{ getSelectedCustomerPhone() }}</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm text-danger shadow-none bg-light rounded-circle" ng-click="clearCustomer()" title="Change Customer">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+
+                <div ng-if="!sale.selectedCustomerId" class="position-relative">
+                    <div class="input-group shadow-sm rounded-3">
+                        <span class="input-group-text bg-white border-end-0 text-secondary">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0 shadow-none py-2" 
+                               placeholder="Search by name or phone number" 
+                               ng-model="searchCustomerTemp"
+                               ng-focus="showCustomerDropdown = true">
+        <button class="btn btn-outline-primary shadow-none" data-bs-toggle="modal" data-bs-target="#newCustomerModal" title="Add Customer" style="background-color: var(--blue); color: white; border-color: var(--blue);">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="position-absolute w-100 bg-white border rounded-3 shadow mt-1 custom-scrollbar" 
+                         style="z-index: 1000; max-height: 200px; overflow-y: auto;" 
+                         ng-show="showCustomerDropdown && (customers | filter:searchCustomerTemp).length > 0">
+                        <div class="p-3 border-bottom dropdown-item" 
+                             style="cursor: pointer; transition: background-color 0.2s;"
+                             ng-repeat="c in customers | filter:searchCustomerTemp | limitTo: 10"
+                             ng-click="selectCustomer(c)"
+                             onmouseover="this.classList.add('bg-light')"
+                             onmouseout="this.classList.remove('bg-light')">
+                            <div class="fw-bold text-dark mb-1">{{ c.name }}</div>
+                            <div class="text-secondary small d-flex align-items-center gap-2" style="font-size: 13px;">
+                                <span><i class="bi bi-telephone-fill me-1"></i> {{ c.phone || 'No phone' }}</span>
+                            </div>
+                        </div>
+                        <div class="p-2 text-center border-top">
+                            <button class="btn btn-sm btn-link text-decoration-none" ng-click="showCustomerDropdown = false">Close Menu</button>
+                        </div>
+                    </div>
+                    
+                    <div class="position-absolute w-100 bg-white border rounded-3 shadow mt-1 p-3 text-center text-secondary" 
+                         style="z-index: 1000;" 
+                         ng-show="showCustomerDropdown && searchCustomerTemp && (customers | filter:searchCustomerTemp).length === 0">
+                         No customers found. <br>
+               <button class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#newCustomerModal" ng-click="showCustomerDropdown = false">Add New Customer</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 flex-grow-1" style="overflow-y: auto; max-height: 40vh;">
+                
+                <div class="text-center py-5 text-secondary" ng-if="cart.length === 0">
+                    <i class="bi bi-cart-x fs-1 text-light d-block mb-2"></i>
+                    <div>Cart is empty. Scan items to begin.</div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom" ng-repeat="item in cart">
+                    
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">{{ item.name }}</div>
+                        <div class="text-secondary small">{{ item.price | currency:"EGP " }}</div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2 me-3">
+                        <button class="btn btn-sm btn-light border rounded-circle shadow-none" ng-click="updateQty(item, -1)">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                        <span class="fw-bold px-1">{{ item.qty }}</span>
+                        <button class="btn btn-sm btn-light border rounded-circle shadow-none" ng-click="updateQty(item, 1)">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+
+                    <div class="fw-bold text-dark me-3">
+                        {{ (item.price * item.qty) | currency:"EGP " }}
+                    </div>
+
+                    <button class="btn btn-sm text-danger shadow-none" ng-click="removeFromCart($index)" title="Remove">
+                        <i class="bi bi-x-circle-fill fs-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 bg-light border-top rounded-bottom-3">
+                
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-secondary fw-semibold">Subtotal</span>
+                    <span class="fw-bold">{{ totals.subtotal | currency:"EGP " }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 small">
+                    <span class="text-secondary fw-semibold">VAT (14%)</span>
+                    <span class="fw-bold">{{ totals.tax | currency:"EGP " }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-secondary fw-semibold small">Discount</span>
+                    <div class="input-group input-group-sm" style="width: 120px;">
+                        <span class="input-group-text bg-white border-end-0">EGP</span>
+                        <input type="number" class="form-control border-start-0 shadow-none text-end fw-bold" ng-model="sale.discount" ng-change="calculateTotals()" min="0">
+                    </div>
+                </div>
+
+                <hr class="text-secondary">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="fw-bold fs-5">Total</span>
+                    <span class="fw-bold fs-4 text-success">{{ totals.grandTotal | currency:"EGP " }}</span>
+                </div>
+
+                <div class="row g-2 mb-4">
+                    <div class="col-6">
+                        <label class="form-label small text-secondary fw-semibold mb-1">Payment</label>
+                        <select class="form-select form-select-sm shadow-none border-0" ng-model="sale.paymentMethod">
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label small text-secondary fw-semibold mb-0">Received</label>
+                            <div class="form-check form-switch mb-0">
+                <input class="form-check-input shadow-none" type="checkbox" id="paidInFullSwitch" ng-model="sale.paidInFull" ng-change="onPaidInFullChange()" style="cursor: pointer;">
+                                <label class="form-check-label small text-secondary" for="paidInFullSwitch" style="cursor: pointer; font-size: 11px;">Paid in Full</label>
+                            </div>
+                        </div>
+                        <input type="number" step="0.01" class="form-control form-control-sm shadow-none border-0 text-end fw-bold" 
+                               ng-model="sale.amountReceived" ng-change="calculateTotals()" placeholder="0.00" 
+                               ng-disabled="sale.paidInFull">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4 p-2 rounded-3 bg-white border" ng-if="totals.change >0">
+                    <span class="text-warning fw-bold small"> Change Due</span>
+                    <span class="fw-bold fs-5 text-dark">{{ totals.change | currency:"EGP " }}</span>
+                </div>
+
+    <div class="alert alert-danger py-2 px-3 small d-flex align-items-center gap-2 mb-3 border-0 bg-danger bg-opacity-10 text-danger rounded-3 fw-semibold" ng-if="validationError">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    {{ validationError }}
+                </div>
+
+                <button class="btn w-100 py-3 text-white fw-bold shadow-sm d-flex justify-content-center align-items-center gap-2" 
+                        style="background-color: var(--blue); font-size: 16px;" 
+                        ng-click="checkout()">
+                    <i class="bi bi-bag-check-fill fs-5"></i> Complete Checkout
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- new customer pop up window -->
+<div class="modal fade" id="newCustomerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header border-bottom pb-3">
+        <h5 class="fw-bold mb-0"><i class="bi bi-person-plus-fill text-primary me-2"></i>New Customer</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close" id="closeNewCustomerModal"></button>
+      </div>
+      <form ng-submit="saveNewCustomer()">
+        <div class="modal-body p-4">
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control bg-light border-0 shadow-none py-2" 
+                           placeholder="e.g. Ahmed Mahmoud" 
+                           ng-model="newCustomer.name" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Phone <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control bg-light border-0 shadow-none py-2" 
+                           placeholder="01xxxxxxxxx" 
+                           ng-model="newCustomer.phone" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Email</label>
+                    <input type="email" class="form-control bg-light border-0 shadow-none py-2" 
+                           placeholder="email@example.com" 
+                           ng-model="newCustomer.email">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label fw-semibold small">City / Governorate</label>
+                    <select class="form-select bg-light border-0 shadow-none py-2" ng-model="newCustomer.address">
+                        <option value="">Select a city...</option>
+                        <option value="Cairo">Cairo</option>
+                        <option value="Giza">Giza</option>
+                        <option value="Alexandria">Alexandria</option>
+                        <option value="Mansoura">Mansoura</option>
+                        <option value="Tanta">Tanta</option>
+                        <option value="Port Said">Port Said</option>
+                        <option value="Suez">Suez</option>
+                        <option value="Luxor">Luxor</option>
+                        <option value="Aswan">Aswan</option>
+                        <option value="Assiut">Assiut</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer border-top pt-3">
+            <button type="button" class="btn btn-light bg-white border shadow-sm text-secondary px-4 py-2" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn text-white px-4 py-2 shadow-sm" style="background-color: var(--blue);" ng-disabled="isSavingCustomer">
+                <span class="spinner-border spinner-border-sm me-2" role="status" ng-if="isSavingCustomer"></span>
+                Save & Select
+            </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

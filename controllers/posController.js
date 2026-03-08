@@ -234,8 +234,19 @@ $scope.addToCart = function(medicine) {
 
         // post invoice to the database using your service
         invoiceService.createFullInvoice(invoiceData, mappedCartItems)
-            .then(function(response) {
+            .then(function(newInvoice) {
                 
+                $scope.completedInvoice = {
+                    id: newInvoice.id,
+                    customerName: $scope.getSelectedCustomerName(),
+                    date: newInvoice.created_at,
+                    paymentMethod: $scope.sale.paymentMethod,
+                    items: angular.copy($scope.cart),
+                    totals: angular.copy($scope.totals),
+                    discount: $scope.sale.discount,
+                    amountReceived: $scope.sale.amountReceived
+                };
+
                 // update the stock level for each item in the cart
                 for (let i = 0; i < $scope.cart.length; i++) {
                     let item = $scope.cart[i];
@@ -246,12 +257,9 @@ $scope.addToCart = function(medicine) {
                     medicineService.updateMedicine(item.id, { stock: newStockLevel });
                 }
 
-                alert("Invoice saved and stock updated successfully!");
-                
-                // Fetch new data and clear cart
-                $scope.initPOS().then(function() {
-                    $scope.resetPOS(); 
-                });
+                // Show success modal
+                var myModal = new bootstrap.Modal(document.getElementById('checkoutSuccessModal'));
+                myModal.show();
             })
             .catch(function(error) {
                 console.error("Error saving invoice or updating stock:", error);
@@ -259,8 +267,45 @@ $scope.addToCart = function(medicine) {
             });
     };
 
-    // initialize POS Data when controller loads
     $scope.resetPOS();
     $scope.initPOS();
+
+    $scope.closeReceiptModal = function() {
+        var modalEl = document.getElementById('checkoutSuccessModal');
+        var modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if(modalInstance) {
+            modalInstance.hide();
+        } else {
+            var mb = bootstrap.Modal.getOrCreateInstance(modalEl);
+            mb.hide();
+        }
+        
+        var backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(backdrop => backdrop.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('padding-right');
+        document.body.style.removeProperty('overflow');
+        
+        $scope.completedInvoice = null;
+        $scope.initPOS().then(function() {
+            $scope.resetPOS();
+        });
+    };
+    
+    // print PDF 
+    $scope.printReceipt = function() {
+        var element = document.getElementById('posReceiptToPrint');
+        if (!element) return;
+        
+        var opt = {
+            margin:       0.5,
+            filename:     'receipt_' + $scope.completedInvoice.id + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        
+        html2pdf().set(opt).from(element).save();
+    };
 
 });

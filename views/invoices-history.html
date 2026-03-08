@@ -191,10 +191,13 @@
           <i class="bi bi-receipt-cutoff text-primary me-2"></i>
           Invoice <span class="text-secondary" ng-if="selectedInvoice">#{{ selectedInvoice.id }}</span>
         </h5>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" ng-click="downloadPDF()" ng-if="selectedInvoice"><i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF</button>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
       </div>
 
-      <div class="modal-body p-4" ng-if="selectedInvoice">
+      <div class="modal-body p-4" ng-if="selectedInvoice" id="invoiceToPrint">
 
         <!-- Invoice Summary -->
         <div class="row g-3 mb-4">

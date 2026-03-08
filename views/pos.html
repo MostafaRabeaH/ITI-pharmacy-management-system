@@ -293,3 +293,104 @@
     </div>
   </div>
 </div>
+
+<!-- Checkout Success pop up  -->
+<div class="modal fade" id="checkoutSuccessModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header border-bottom pb-3">
+        <h5 class="fw-bold mb-0 text-success">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          Checkout Successful
+        </h5>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" ng-click="printReceipt()"><i class="bi bi-printer-fill me-1"></i> Print Invoice</button>
+        </div>
+      </div>
+
+      <div class="modal-body p-4" id="posReceiptToPrint" ng-if="completedInvoice">
+        <!-- Invoice Summary -->
+        <h4 class="text-center mb-4 fw-bold" style="color: var(--blue);">PharmaCare</h4>
+        
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="bg-light rounded-3 p-3">
+              <small class="text-secondary fw-bold text-uppercase" style="font-size: 10px">Invoice No.</small>
+              <div class="fw-bold text-dark mt-1">#{{ completedInvoice.id }}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="bg-light rounded-3 p-3">
+              <small class="text-secondary fw-bold text-uppercase" style="font-size: 10px">Customer</small>
+              <div class="fw-bold text-dark mt-1">{{ completedInvoice.customerName }}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="bg-light rounded-3 p-3">
+               <small class="text-secondary fw-bold text-uppercase" style="font-size: 10px">Date</small>
+               <div class="fw-bold text-dark mt-1">{{ completedInvoice.date | date:'MMM d, y - h:mm a' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items table -->
+        <div class="table-responsive mb-4">
+          <table class="table table-sm align-middle mb-0">
+            <thead class="bg-light text-secondary" style="font-size: 12px">
+              <tr>
+                <th class="border-0 fw-semibold text-uppercase py-2">Item</th>
+                <th class="border-0 fw-semibold text-uppercase py-2 text-center">Qty</th>
+                <th class="border-0 fw-semibold text-uppercase py-2 text-end">Price</th>
+                <th class="border-0 fw-semibold text-uppercase py-2 text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in completedInvoice.items">
+                <td class="py-2"><div class="fw-semibold text-dark">{{ item.name }}</div></td>
+                <td class="py-2 text-center"><span class="badge bg-light text-dark border fw-bold px-2" style="font-size: 12px;">{{ item.qty }}</span></td>
+                <td class="py-2 text-end text-secondary" style="font-size: 12px;">{{ item.price | currency:"EGP " }}</td>
+                <td class="py-2 text-end fw-semibold" style="font-size: 13px;">{{ (item.price * item.qty) | currency:"EGP " }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-end mb-4">
+            <div style="width: 250px;">
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-secondary fw-semibold">Subtotal</span>
+                    <span class="fw-bold">{{ completedInvoice.totals.subtotal | currency:"EGP " }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-secondary fw-semibold">VAT (14%)</span>
+                    <span class="fw-bold">{{ completedInvoice.totals.tax | currency:"EGP " }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-secondary fw-semibold">Discount</span>
+                    <span class="fw-bold text-danger">-{{ completedInvoice.discount | currency:"EGP " }}</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold fs-6">Total</span>
+                    <span class="fw-bold fs-5 text-success">{{ completedInvoice.totals.grandTotal | currency:"EGP " }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-1 small text-secondary">
+                    <span>Paid ({{ completedInvoice.paymentMethod }})</span>
+                    <span>{{ completedInvoice.amountReceived | currency:"EGP " }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small" ng-if="completedInvoice.totals.change > 0">
+                    <span class="text-warning fw-bold">Change Due</span>
+                    <span class="fw-bold text-dark">{{ completedInvoice.totals.change | currency:"EGP " }}</span>
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer border-top pt-3">
+          <button type="button" class="btn btn-primary px-4 py-2 shadow-sm" style="background-color: var(--blue);" ng-click="closeReceiptModal()">
+              New Sale
+          </button>
+      </div>
+    </div>
+  </div>
+</div>

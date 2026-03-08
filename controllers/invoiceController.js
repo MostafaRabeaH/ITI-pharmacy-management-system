@@ -69,4 +69,20 @@ app.controller('invoiceController', function($scope, invoiceService) {
         });
     };
 
+    // print PDF 
+    $scope.downloadPDF = function() {
+        var element = document.getElementById('invoiceToPrint');
+        if (!element) return;
+        
+        var opt = {
+            margin:       0.5,
+            filename:     'invoice_' + $scope.selectedInvoice.id + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        
+        html2pdf().set(opt).from(element).save();
+    };
+
 });

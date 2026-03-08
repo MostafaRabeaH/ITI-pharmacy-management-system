@@ -50,7 +50,10 @@ app.service("invoiceService", function($http) {
                 });
 
                 // 3- bulk insert all items into invoice_items table
-                return $http.post(apiLinkInvoiceItems, itemsToInsert, { headers: headers });
+                return $http.post(apiLinkInvoiceItems, itemsToInsert, { headers: headers })
+                    .then(function() {
+                        return newInvoice;
+                    });
             });
     };
 

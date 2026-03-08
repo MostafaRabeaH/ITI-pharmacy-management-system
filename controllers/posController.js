@@ -109,7 +109,20 @@ app.controller ("posController", function($scope, medicineService, customerServi
 
 
 // add to cart func
-$scope.addToCart = function(medicine) {
+    $scope.isExpired = function(medicine) {
+        if (!medicine.expiry_date) return false;
+        let expiryDate = new Date(medicine.expiry_date);
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return expiryDate < today;
+    };
+
+    $scope.addToCart = function(medicine) {
+        if ($scope.isExpired(medicine)) {
+            $scope.validationError = "Cannot add expired item (" + medicine.name + ") to the cart.";
+            return;
+        }
+
         // Check if the medicine is already in the cart
         let existingItem = $scope.cart.find(function(item) {
             return item.id === medicine.id;
